@@ -1,0 +1,27 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -e '.tool_input.file_path | type == \"string\" and test(\"(^|/)\\\\.env$\")' > /dev/null && jq -n '{\"continue\":false,\"stopReason\":\".env files contain secrets — edit them outside the agent\"}' && exit 2 || exit 0"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | { read -r f; [ -n \"$f\" ] && case \"$f\" in *.go) command -v gofmt >/dev/null && gofmt -w \"$f\";; *.py) command -v ruff >/dev/null && ruff format -q \"$f\";; *.ts|*.tsx|*.js|*.jsx|*.json|*.css) command -v npx >/dev/null && npx --no-install prettier -w \"$f\" >/dev/null 2>&1;; esac; } 2>/dev/null || true",
+            "statusMessage": "Formatting..."
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+# Project repos are independent git repos, cloned into repos/
+repos/*
+!repos/CLAUDE.md
+
+# Personal / machine-local
+.claude/settings.local.json
+.claude/worktrees/
+.mcp.json
+.codex/config.toml
+.DS_Store
+*.swp
+*.swo
+*~
+.worktrees/
+.playwright-mcp/
+.superpowers/
